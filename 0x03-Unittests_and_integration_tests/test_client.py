@@ -105,6 +105,15 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(test_class.public_repos("test"), [])
         mock_get_json.assert_called()
 
+    def test_public_repos_with_license(self, mock_get_json):
+        """test_public_repos_with_license function.
+        Tests that the list of repos is what you expect from the chosen payload
+        """
+        test_class = GithubOrgClient("test")
+        self.assertEqual(test_class.public_repos("apache-2.0"),
+                         self.apache2_repos)
+        mock_get_json.assert_called()
+
 
 if __name__ == '__main__':
     unittest.main()
