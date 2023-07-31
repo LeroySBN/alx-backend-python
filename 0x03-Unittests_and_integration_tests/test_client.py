@@ -96,6 +96,15 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         cls.get_patcher.stop()
 
+    def test_public_repos(self, mock_get_json):
+        """test_public_repos function.
+        Tests that the list of repos is what you expect from the chosen payload
+        """
+        test_class = GithubOrgClient("test")
+        self.assertEqual(test_class.public_repos(), self.expected_repos)
+        self.assertEqual(test_class.public_repos("test"), [])
+        mock_get_json.assert_called()
+
 
 if __name__ == '__main__':
     unittest.main()
