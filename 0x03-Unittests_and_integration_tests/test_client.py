@@ -78,7 +78,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     """
 
     @classmethod
-    @patch('client.get_json')
     def setUpClass(cls, mock_get_json):
         """setUpClass method.
         """
