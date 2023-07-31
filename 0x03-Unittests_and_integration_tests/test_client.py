@@ -83,14 +83,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls, mock_get_json):
         """setUpClass method.
         """
+        cls.get_patcher = patch('requests.get')
+        cls.get_patcher.start()
         mock_get_json.side_effect = [
-            cls.org_payload,
-            cls.repos_payload,
-            cls.org_payload,
+            cls.org_payload, cls.repos_payload, cls.org_payload,
             cls.repos_payload
         ]
-        cls.get_patcher = patch('client.get_json')
-        cls.mock_get_json = cls.get_patcher.start()
 
     @classmethod
     def tearDownClass(cls):
