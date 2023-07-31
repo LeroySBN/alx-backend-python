@@ -10,7 +10,7 @@ from unittest.mock import patch, PropertyMock
 class TestGithubOrgClient(unittest.TestCase):
     """TestGithubOrgClient class
     """
-    
+
     @parameterized.expand([
         ("google",),
         ("abc",)
@@ -21,8 +21,9 @@ class TestGithubOrgClient(unittest.TestCase):
         Tests that GithubOrgClient.org returns the correct value.
         """
         test_class = GithubOrgClient(test_org_name)
+        expected_url = f"https://api.github.com/orgs/{test_org_name}"
         test_class.org()
-        mock_get_json.assert_called_once_with(f'https://api.github.com/orgs/{test_org_name}')
+        mock_get_json.assert_called_once_with(expected_url)
 
     def test_public_repos_url(self):
         """test_public_repos_url function.
@@ -30,19 +31,19 @@ class TestGithubOrgClient(unittest.TestCase):
         based on the mocked payload.
         """
         with patch('client.GithubOrgClient.org',
-                PropertyMock(return_value={"repos_url": "test_url"})):
+                   PropertyMock(return_value={"repos_url": "test_url"})):
             test_class = GithubOrgClient("test")
             self.assertEqual(test_class._public_repos_url, "test_url")
 
     @patch('client.get_json')
     def test_public_repos(self, mock_get_json):
         """test_public_repos function.
-        Tests that the list of repos is what you expect from the chosen payload.
+        Tests that the list of repos is what you expect from the chosen payload
         """
         payload = [{"name": "Google"}, {"name": "Twitter"}]
         mock_get_json.return_value = payload
         with patch('client.GithubOrgClient._public_repos_url',
-                PropertyMock(return_value="test_url")):
+                   PropertyMock(return_value="test_url")):
             test_class = GithubOrgClient("test")
             self.assertEqual(test_class.public_repos(), ["Google", "Twitter"])
             mock_get_json.assert_called_once_with("test_url")
@@ -59,7 +60,9 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         with patch.object(GithubOrgClient, 'has_license') as mock_has_license:
             mock_has_license.return_value = expected
-            self.assertEqual(GithubOrgClient.has_license(repo, license_key), expected)
+            self.assertEqual(GithubOrgClient.has_license(
+                repo,
+                license_key), expected)
             mock_has_license.assert_called_once_with(repo, license_key)
 
 
