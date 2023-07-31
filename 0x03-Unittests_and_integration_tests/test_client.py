@@ -96,7 +96,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         cls.get_patcher.stop()
 
-    def test_public_repos(self, mock_get_json):
+    def test_public_repos(self):
         """test_public_repos function.
         Tests that the list of repos is what you expect from the chosen payload
         """
@@ -105,7 +105,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(test_class.public_repos("test"), [])
         mock_get_json.assert_called()
 
-    def test_public_repos_with_license(self, mock_get_json):
+    def test_public_repos_with_license(self):
         """test_public_repos_with_license function.
         Tests that the list of repos is what you expect from the chosen payload
         """
