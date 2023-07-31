@@ -2,9 +2,12 @@
 """test_client module
 """
 import unittest
+import fixtures
 from client import GithubOrgClient
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, PropertyMock
+from urllib.error import HTTPError
+from utils import get_json
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -64,6 +67,33 @@ class TestGithubOrgClient(unittest.TestCase):
                 repo,
                 license_key), expected)
             mock_has_license.assert_called_once_with(repo, license_key)
+
+
+@parameterized_class([
+    {"org_payload": fixtures.TEST_PAYLOAD[0][0],
+     "repos_payload": fixtures.TEST_PAYLOAD[0][1], }
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """TestIntegrationGithubOrgClient class
+    """
+
+    @classmethod
+    @patch('client.get_json')
+    def setUpClass(cls, mock_get_json):
+        """setUpClass method.
+        """
+        mock_get_json.side_effect = [
+            cls.org_payload, cls.repos_payload,
+            cls.org_payload, cls.repos_payload
+        ]
+        cls.get_patcher = patch('client.get_json')
+        cls.mock_get_json = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        """tearDownClass method.
+        """
+        cls.get_patcher.stop()
 
 
 if __name__ == '__main__':
